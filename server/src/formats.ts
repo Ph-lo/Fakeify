@@ -17,3 +17,14 @@ export const PHONE_FORMATS: Formats = {
     base: [""],
   },
 };
+
+export const EMAIL_PROVIDERS: string[] = [
+  "gmail",
+  "yahoo",
+  "outlook",
+  "gmx",
+  "aol",
+  "yandex",
+  "icloud",
+  "proton",
+];
