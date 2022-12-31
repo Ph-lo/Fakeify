@@ -12,6 +12,11 @@
 
 const firstnames = require("../lists/firstnames.json");
 const lastnames = require("../lists/lastnames.json");
+const phones = require("./models/phones");
+
+// ######################################################################################
+// ##############################         NAMES         #################################
+// ######################################################################################
 
 exports.randomFirstname = (req: any, res: any, next: any) => {
   const firstname = firstnames[Math.floor(Math.random() * firstnames.length)];
@@ -29,4 +34,13 @@ exports.randomName = (req: any, res: any, next: any) => {
     " " +
     lastnames[Math.floor(Math.random() * lastnames.length)];
   res.status(200).json(name);
+};
+
+// ######################################################################################
+// ##############################         PHONES         ################################
+// ######################################################################################
+
+exports.randomPhoneNumber = (req: any, res: any, next: any) => {
+  const phoneNbr = phones.getRandomPhoneNumber(req?.body?.format);
+  res.status(200).json(phoneNbr);
 };

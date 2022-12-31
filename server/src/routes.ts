@@ -3,7 +3,7 @@ const router = express.Router();
 
 const controller = require("./controller.ts");
 
-// router.post("/", controller.createThing);
+router.post("/randomPhone", controller.randomPhoneNumber);
 // router.put("/:id", controller.modifyThings);
 // router.delete("/:id", controller.deleteThing);
 // router.get("/:id", controller.getOneThing);
