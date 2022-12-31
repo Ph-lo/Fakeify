@@ -1,10 +1,12 @@
 import { EMAIL_PROVIDERS } from "../formats";
 const randomNames = require("../models/names");
 
-module.exports.getRandomEmail = (name?: {
+type randomEmailProps = {
   firstname: string;
   lastname: string;
-}) => {
+};
+
+module.exports.getRandomEmail = (name?: randomEmailProps) => {
   let email = "";
   let prefix;
 
