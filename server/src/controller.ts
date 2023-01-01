@@ -12,6 +12,7 @@
 const phones = require("./models/phones");
 const emails = require("./models/emails");
 const names = require("./models/names");
+const texts = require("./models/texts");
 
 // ######################################################################################
 // ##############################         NAMES         #################################
@@ -48,4 +49,18 @@ exports.randomPhoneNumber = (req: any, res: any, next: any) => {
 exports.randomEmail = (req: any, res: any, next: any) => {
   const email = emails.getRandomEmail(req?.body?.name);
   res.status(200).json(email);
+};
+
+// ######################################################################################
+// ##############################         TEXTS         #################################
+// ######################################################################################
+
+exports.randomParagraph = (req: any, res: any, next: any) => {
+  const str = texts.getRandomParagraph();
+  res.status(200).json(str);
+};
+
+exports.randomParagraphs = (req: any, res: any, next: any) => {
+  const paragraphs = texts.getRandomParagraphs(req?.body?.nbrOfP);
+  res.status(200).json(paragraphs);
 };

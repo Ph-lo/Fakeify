@@ -28,3 +28,5 @@ export const EMAIL_PROVIDERS: string[] = [
   "icloud",
   "proton",
 ];
+
+export const characters = "abcdefghijklmnopqrstuvwxyz";

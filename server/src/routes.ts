@@ -5,9 +5,10 @@ const controller = require("./controller.ts");
 
 router.post("/randomPhone", controller.randomPhoneNumber);
 router.post("/randomEmail", controller.randomEmail);
-// router.put("/:id", controller.modifyThings);
-// router.delete("/:id", controller.deleteThing);
-// router.get("/:id", controller.getOneThing);
+router.post("/randomParagraphs", controller.randomParagraphs);
+
+router.get("/randomParagraph", controller.randomParagraph);
+router.get("/randomEmail", controller.randomEmail);
 router.get("/randomName", controller.randomName);
 
 module.exports = router;
