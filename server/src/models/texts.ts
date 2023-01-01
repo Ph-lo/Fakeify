@@ -26,16 +26,16 @@ const randomParagraph = () => {
 
   for (let match of matches) indexes.push(match.index);
 
+  res = res.replace(/\s+/g, " ").trim();
   while (nbrOfPeriods > 0) {
     const pos = indexes[Math.floor(Math.random() * indexes.length)];
     const capitalized = res.charAt(pos + 1).toUpperCase();
 
-    res = res.slice(0, pos + 1) + capitalized + res.slice(pos + 2);
-    res = res.slice(0, pos) + ". " + res.slice(pos);
+    res = res.slice(0, pos) + "." + res.slice(pos);
+    res = res.slice(0, pos + 2) + capitalized + res.slice(pos + 3);
     indexes.splice(indexes.indexOf(pos), 1);
     --nbrOfPeriods;
   }
-  res = res.replace(/\s+/g, " ").trim();
   res = res.charAt(0).toUpperCase() + res.slice(1);
   res += ".";
   return res;
