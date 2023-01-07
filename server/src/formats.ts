@@ -30,3 +30,5 @@ export const EMAIL_PROVIDERS: string[] = [
 ];
 
 export const characters = "abcdefghijklmnopqrstuvwxyz";
+
+export const IdsCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

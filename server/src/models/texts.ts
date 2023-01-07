@@ -1,4 +1,5 @@
 import { characters } from "../formats";
+import { IdsCharacters } from "../formats";
 
 const randomNbr = () => {
   const nbr = Math.floor(Math.random() * (4 - 1) + 1);
@@ -53,3 +54,18 @@ module.exports.getRandomParagraphs = (pNbr: number) => {
   }
   return res;
 };
+
+module.exports.getRandomStringId = (length: number) => {
+  let res = "";
+  const charactersLength = IdsCharacters.length;
+  for (let i = 0; i < length; i++) {
+    res += IdsCharacters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return res;
+}
+
+module.exports.getRandomId = (length: number) => {
+  const nbr = Math.floor(Math.random() * (100000 - 1) + 1);
+  return nbr;
+}
