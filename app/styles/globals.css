@@ -117,3 +117,6 @@ a {
   z-index: 100 !important;
 }
 
+.zIndex {
+  z-index: 100;
+}

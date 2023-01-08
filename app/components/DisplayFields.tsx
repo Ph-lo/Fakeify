@@ -6,17 +6,17 @@ import Link from "next/link";
 import Select from "react-select";
 import { MdDragIndicator } from "react-icons/md";
 import { TiDeleteOutline } from "react-icons/ti";
+import { useRouter } from "next/router";
 
 interface FieldProps {
   name: string;
-  type: {value: string, label: string};
+  type: { value: string; label: string };
   maxLen?: number;
-  format?: {value: string, label: string};
+  format?: { value: string; label: string };
 }
 
 interface Props {
   fields: FieldProps[];
-  setData: (data: any) => void;
 }
 
 const TYPES = [
@@ -66,16 +66,19 @@ const TYPES = [
   },
 ];
 
+export const DisplayFields = ({ state, setState }: any) => {
+  //const [state, setState] = useState<any>([]);
+  const router = useRouter();
 
-export const DisplayFields = ({ fields, setData }: Props) => {
-  const [state, setState] = useState<any>(fields);
+  // useEffect(() => {
+  //   if (router?.query?.field) {
+  //     //@ts-ignore
+  //     setState([...state, JSON.parse(router.query?.field)]);
+  //     router.push({ query: {} });
+  //   }
+  // }, [router?.query]);
+  console.log(state);
 
-  useEffect(() => {
-    setState(fields);
-    setData(fields);
-  },[fields])
-  console.log(state)
-  
   return (
     <motion.div
       key="all-fields"
@@ -92,8 +95,14 @@ export const DisplayFields = ({ fields, setData }: Props) => {
           <div className="w-20" />
         </header>
         <div className="mt-10">
-          {fields?.map((row: any, index: number) => (
-            <FieldsRow key={`field-${index}`} row={row} index={index} fields={fields} setState={setState} />
+          {state?.map((row: any, index: number) => (
+            <FieldsRow
+              key={`field-${index}`}
+              row={row}
+              index={index}
+              state={state}
+              setState={setState}
+            />
           ))}
         </div>
       </div>
@@ -101,37 +110,46 @@ export const DisplayFields = ({ fields, setData }: Props) => {
   );
 };
 
-const FieldsRow = ({ row, index, fields, setState }: any) => {
+const FieldsRow = ({ row, index, state, setState }: any) => {
   //console.log(index);
   return (
     <div className="flex my-3 px-10 space-x-5">
       <div className="w-full">
-        <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px] flex justify-center items-center">{row?.name}</p>
+        <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px] flex justify-center items-center">
+          {row?.name}
+        </p>
       </div>
       <div className="w-full">
-        <p className="bg-primary text-secondary rounded-lg h-9 max-w-[190px] flex justify-center items-center">{row?.type?.label}</p>
+        <p className="bg-primary text-secondary rounded-lg h-9 max-w-[190px] flex justify-center items-center">
+          {row?.type?.label}
+        </p>
       </div>
       <div className="w-full">
         {row?.format ? (
-          <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px] flex justify-center items-center">{row?.format?.label}</p>
+          <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px] flex justify-center items-center">
+            {row?.format?.label}
+          </p>
         ) : (
           <div className="h-10 w-full max-w-[191px] bg-secondary rounded-lg opacity-40"></div>
         )}
       </div>
       <div className="w-full">
         {row?.maxLength ? (
-          <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px] flex justify-center items-center">{row?.maxLength}</p>
+          <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px] flex justify-center items-center">
+            {row?.maxLength}
+          </p>
         ) : (
           <div className="h-10 w-full max-w-[191px] bg-secondary rounded-lg opacity-40"></div>
         )}
       </div>
-      <div className="w-20">
+      <div className="w-20 flex items-center">
         <TiDeleteOutline
-          className="cursor-pointer"
+          size={22}
+          className="cursor-pointer hover:text-secondary transition-colors ease-in-out duration-200"
           onClick={() => {
-            fields.splice(index, 1);
-            console.log(fields);
-            setState(fields);
+            let tmpState = [...state];
+            tmpState.splice(index, 1);
+            setState(tmpState);
           }}
         />
       </div>

@@ -10,8 +10,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 export const SideMenu = ({ isHome, setIsHome, data, setData }: any) => {
-  
-
   return (
     <motion.div
       //className=" bg-[#ACECA1] rounded-3xl"
@@ -66,32 +64,41 @@ export const SideMenu = ({ isHome, setIsHome, data, setData }: any) => {
   );
 };
 
-const FormNav = ({data, setData}: any) => {
-  const {push, query} = useRouter();
+const FormNav = ({ data, setData }: any) => {
+  const { push, query } = useRouter();
   const [newField, setNewField] = useState<any>({});
   const options: { value: string; label: string }[] = [
     { label: "String", value: "string" },
   ];
   const FORMATS = {
-    phone: [{value: "us", label: "US"}, {value: "uk", label: "UK"}, {value: "fr", label: "FR"}],
-    date: [{value: "DD/MM/YYYY", label: "DD/MM/YYYY"}, {value: "MM/DD/YYYY", label: "MM/DD/YYYY"}, {value: "MMM Do YYYY", label: "Jan 1st 2023"}, {value: "ddd Do MMM YYYY", label: "Mon 1st Jan 2023"}]
+    phone: [
+      { value: "us", label: "US" },
+      { value: "uk", label: "UK" },
+      { value: "fr", label: "FR" },
+    ],
+    date: [
+      { value: "DD/MM/YYYY", label: "DD/MM/YYYY" },
+      { value: "MM/DD/YYYY", label: "MM/DD/YYYY" },
+      { value: "MMM Do YYYY", label: "Jan 1st 2023" },
+      { value: "ddd Do MMM YYYY", label: "Mon 1st Jan 2023" },
+    ],
   };
   const TYPES: { value: string; label: string }[] = [
-    {value: "id", label: "id - int"},
-    {value: "stringId", label: "id - string"},
-    {value: "firstname", label: "Firstname"},
-    {value: "lastname", label: "Lastname"},
-    {value: "name", label: "Firstname - Lastname"},
-    {value: "phone", label: "Phone number"},
-    {value: "email", label: "Email"},
-    {value: "paragraph", label: "Paragraph"},
-    {value: "paragraphs", label: "Paragraphs"},
-    {value: "date", label: "Date"},
-    {value: "fullAddress", label: "Full address"},
-    {value: "postcode", label: "Postcode"},
-    {value: "street", label: "Street n° & name"},
-    {value: "country", label: "Country"},
-  ]
+    { value: "id", label: "id - int" },
+    { value: "stringId", label: "id - string" },
+    { value: "firstname", label: "Firstname" },
+    { value: "lastname", label: "Lastname" },
+    { value: "name", label: "Firstname - Lastname" },
+    { value: "phone", label: "Phone number" },
+    { value: "email", label: "Email" },
+    { value: "paragraph", label: "Paragraph" },
+    { value: "paragraphs", label: "Paragraphs" },
+    { value: "date", label: "Date" },
+    { value: "fullAddress", label: "Full address" },
+    { value: "postcode", label: "Postcode" },
+    { value: "street", label: "Street n° & name" },
+    { value: "country", label: "Country" },
+  ];
   const hasLengthParam = ["id", "stringId", "paragraphs"];
 
   const theme = (theme: any) => ({
@@ -99,8 +106,8 @@ const FormNav = ({data, setData}: any) => {
     borderRadius: 0,
     colors: {
       ...theme.colors,
-      primary25: '#DDDDDD',
-      primary: '#30475E',
+      primary25: "#DDDDDD",
+      primary: "#30475E",
     },
   });
 
@@ -120,8 +127,8 @@ const FormNav = ({data, setData}: any) => {
     }),
     option: (provided: any, state: any) => ({
       ...provided,
-      color: state?.isSelected ? "white" : "black"
-    })
+      color: state?.isSelected ? "white" : "black",
+    }),
   };
   // console.log(newField)
   return (
@@ -149,8 +156,10 @@ const FormNav = ({data, setData}: any) => {
                   type="text"
                   name="name"
                   id="name"
-                  value={newField?.name ?? ''}
-                  onChange={(e) => setNewField({...newField, name: e?.target?.value})}
+                  value={newField?.name ?? ""}
+                  onChange={(e) =>
+                    setNewField({ ...newField, name: e?.target?.value })
+                  }
                 />
               </div>
               <div className="flex space-x-2 items-center">
@@ -165,25 +174,40 @@ const FormNav = ({data, setData}: any) => {
                   theme={theme}
                   styles={customStyle}
                   value={newField?.type ?? ""}
-                  onChange={(e: any) => setNewField({...newField, type: e})}
+                  onChange={(e: any) => setNewField({ ...newField, type: e })}
                 />
               </div>
-              <div className={`flex space-x-2 mr-4 items-center ${!hasLengthParam.includes(newField?.type?.value) && "opacity-50"}`}>
+              <div
+                className={`flex space-x-2 mr-4 items-center ${
+                  !hasLengthParam.includes(newField?.type?.value) &&
+                  "opacity-50"
+                }`}
+              >
                 <label htmlFor="max">
                   <AiOutlineSliders size={20} color={"black"} />
                 </label>
-                  <input
-                    disabled={hasLengthParam.includes(newField?.type?.value) ? false : true}
-                    placeholder="Max length"
-                    className={`bg-primary border-1 h-9 w-48 pl-3 text-black rounded-lg border-secondary`}
-                    type="number"
-                    name="max"
-                    id="max"
-                    value={newField?.maxLength ?? ''}
-                    onChange={(e: any) => setNewField({...newField, maxLength: e?.target?.value})}
-                  />  
+                <input
+                  disabled={
+                    hasLengthParam.includes(newField?.type?.value)
+                      ? false
+                      : true
+                  }
+                  placeholder="Max length"
+                  className={`bg-primary border-1 h-9 w-48 pl-3 text-black rounded-lg border-secondary`}
+                  type="number"
+                  name="max"
+                  id="max"
+                  value={newField?.maxLength ?? ""}
+                  onChange={(e: any) =>
+                    setNewField({ ...newField, maxLength: e?.target?.value })
+                  }
+                />
               </div>
-              <div className={`flex space-x-2 items-center ${!(newField?.type?.value in FORMATS) && "opacity-50"}`}>
+              <div
+                className={`flex space-x-2 items-center ${
+                  !(newField?.type?.value in FORMATS) && "opacity-50"
+                }`}
+              >
                 <label htmlFor="format">
                   <FiBox size={20} color={"black"} />
                 </label>
@@ -192,26 +216,43 @@ const FormNav = ({data, setData}: any) => {
                   name="format"
                   id="format"
                   placeholder="Select a format"
-                  //@ts-ignore
-                  options={newField?.type?.value in FORMATS ? FORMATS[newField?.type?.value] : [{value: "", label: ""}]}
+                  options={
+                    newField?.type?.value in FORMATS
+                      ? //@ts-ignore
+                        FORMATS[newField?.type?.value]
+                      : [{ value: "", label: "" }]
+                  }
                   theme={theme}
                   styles={customStyle}
                   value={newField?.format ?? ""}
-                  onChange={(e: any) => setNewField({...newField, format: e})}
+                  onChange={(e: any) => setNewField({ ...newField, format: e })}
                 />
               </div>
-              <div className={`flex items-center ${(!newField?.name || newField?.name === "" || !newField?.type) && "opacity-50"}`}>
+              <div
+                className={`flex items-center ${
+                  (!newField?.name ||
+                    newField?.name === "" ||
+                    !newField?.type) &&
+                  "opacity-50"
+                }`}
+              >
                 <input
-                  disabled={(!newField?.name || newField?.name === "" || !newField?.type)}
+                  disabled={
+                    !newField?.name || newField?.name === "" || !newField?.type
+                  }
                   className="bg-primary ml-7 w-20 h-9 text-secondary border-1 rounded-xl border-secondary cursor-pointer"
                   type="submit"
                   name="submit"
                   value={"Add"}
                   onClick={() => {
                     //setData([...data, newField]);
-                    const k = newField?.name;
-                    push({query: {...query, k: newField }});
-                    console.log(query)
+                    push({
+                      query: {
+                        ...query,
+                        field: JSON.stringify(newField),
+                      },
+                    });
+                    //console.log(query);
                     setNewField({});
                   }}
                 />
