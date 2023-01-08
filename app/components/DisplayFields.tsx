@@ -1,10 +1,11 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { AnimatePresence, DraggableProps, motion } from "framer-motion";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { reorder } from "../utils/reorder";
 import Link from "next/link";
 import Select from "react-select";
 import { MdDragIndicator } from "react-icons/md";
+import { TiDeleteOutline } from "react-icons/ti";
 
 interface FieldProps {
   name: string;
@@ -15,6 +16,7 @@ interface FieldProps {
 
 interface Props {
   fields: FieldProps[];
+  setData: (data: any) => void;
 }
 
 const TYPES = [
@@ -64,12 +66,19 @@ const TYPES = [
   },
 ];
 
-export const DisplayFields = ({ fields }: Props) => {
-  const [state, setState] = useState<any>(fields);
-  console.log(state)
 
+export const DisplayFields = ({ fields, setData }: Props) => {
+  const [state, setState] = useState<any>(fields);
+
+  useEffect(() => {
+    setState(fields);
+    setData(fields);
+  },[fields])
+  console.log(state)
+  
   return (
     <motion.div
+      key="all-fields"
       animate={{ opacity: 1 }}
       initial={{ opacity: 0 }}
       transition={{ duration: 0.3, delay: 0 }}
@@ -79,93 +88,53 @@ export const DisplayFields = ({ fields }: Props) => {
           <h3 className="w-full">Name</h3>
           <h3 className="w-full">Type</h3>
           <h3 className="w-full">Format</h3>
-          <h3 className="w-full">Constraint</h3>
+          <h3 className="w-full">Length</h3>
           <div className="w-20" />
         </header>
         <div className="mt-10">
           {fields?.map((row: any, index: number) => (
-            <FieldsRow key={`field-${index}`} row={row} />
+            <FieldsRow key={`field-${index}`} row={row} index={index} fields={fields} setState={setState} />
           ))}
         </div>
-        {/* <DraggableList fields={fields} /> */}
       </div>
     </motion.div>
   );
 };
 
-const FieldsRow = ({ row }: any) => {
-  console.log(row);
+const FieldsRow = ({ row, index, fields, setState }: any) => {
+  //console.log(index);
   return (
     <div className="flex my-3 px-10 space-x-5">
       <div className="w-full">
-        <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px]">{row?.name}</p>
-        {/* <input
-          className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px]"
-          type="text"
-          value={row?.name}
-        /> */}
+        <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px] flex justify-center items-center">{row?.name}</p>
       </div>
       <div className="w-full">
-        <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px]">{row?.type?.label}</p>
-
-        {/* <Select
-          placeholder="Select a type"
-          options={TYPES}
-          value={row?.type}
-          styles={{
-            control: (base) => ({
-              ...base,
-              color: "black",
-              borderColor: "black",
-              borderRadius: "8px",
-              backgroundColor: "#DDDDDD",
-              // This line disable the blue border
-              boxShadow: "none",
-              height: "15px",
-              width: "191px",
-              "&:hover": {
-                borderColor: "black",
-              },
-            }),
-          }}
-        /> */}
+        <p className="bg-primary text-secondary rounded-lg h-9 max-w-[190px] flex justify-center items-center">{row?.type?.label}</p>
       </div>
       <div className="w-full">
         {row?.format ? (
-          <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px]">{row?.format?.label}</p>
-          // <Select
-          //   placeholder="Select a format"
-          //   options={TYPES}
-          //   value={row?.format}
-          //   styles={{
-          //     control: (base) => ({
-          //       ...base,
-          //       color: "black",
-          //       borderColor: "black",
-          //       borderRadius: "8px",
-          //       backgroundColor: "#DDDDDD",
-          //       // This line disable the blue border
-          //       boxShadow: "none",
-          //       height: "15px",
-          //       width: "191px",
-          //       "&:hover": {
-          //         borderColor: "black",
-          //       },
-          //     }),
-          //   }}
-          // />
+          <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px] flex justify-center items-center">{row?.format?.label}</p>
         ) : (
           <div className="h-10 w-full max-w-[191px] bg-secondary rounded-lg opacity-40"></div>
         )}
       </div>
       <div className="w-full">
         {row?.maxLength ? (
-          <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px]">{row?.maxLength}</p>
+          <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px] flex justify-center items-center">{row?.maxLength}</p>
         ) : (
           <div className="h-10 w-full max-w-[191px] bg-secondary rounded-lg opacity-40"></div>
         )}
       </div>
-      <div className="w-20"></div>
+      <div className="w-20">
+        <TiDeleteOutline
+          className="cursor-pointer"
+          onClick={() => {
+            fields.splice(index, 1);
+            console.log(fields);
+            setState(fields);
+          }}
+        />
+      </div>
     </div>
   );
 };

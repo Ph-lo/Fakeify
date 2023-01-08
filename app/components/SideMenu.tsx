@@ -7,6 +7,7 @@ import { TbListNumbers } from "react-icons/tb";
 import { AiOutlineSliders } from "react-icons/ai";
 import Select from "react-select";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export const SideMenu = ({ isHome, setIsHome, data, setData }: any) => {
   
@@ -14,6 +15,7 @@ export const SideMenu = ({ isHome, setIsHome, data, setData }: any) => {
   return (
     <motion.div
       //className=" bg-[#ACECA1] rounded-3xl"
+      key="side-menu"
       animate={{
         width: isHome ? "100%" : "50%",
       }}
@@ -33,6 +35,7 @@ export const SideMenu = ({ isHome, setIsHome, data, setData }: any) => {
         </nav>
         {isHome ? (
           <motion.div
+            key="introduction"
             animate={{ opacity: 1 }}
             initial={{ opacity: 0 }}
             transition={{ duration: 0.3, delay: 0 }}
@@ -64,6 +67,7 @@ export const SideMenu = ({ isHome, setIsHome, data, setData }: any) => {
 };
 
 const FormNav = ({data, setData}: any) => {
+  const {push, query} = useRouter();
   const [newField, setNewField] = useState<any>({});
   const options: { value: string; label: string }[] = [
     { label: "String", value: "string" },
@@ -119,9 +123,10 @@ const FormNav = ({data, setData}: any) => {
       color: state?.isSelected ? "white" : "black"
     })
   };
-  console.log(newField)
+  // console.log(newField)
   return (
     <motion.div
+      key="side-menu-form"
       animate={{ opacity: 1 }}
       initial={{ opacity: 0 }}
       transition={{ duration: 0.3, delay: 0 }}
@@ -203,7 +208,10 @@ const FormNav = ({data, setData}: any) => {
                   name="submit"
                   value={"Add"}
                   onClick={() => {
-                    setData([...data, newField]);
+                    //setData([...data, newField]);
+                    const k = newField?.name;
+                    push({query: {...query, k: newField }});
+                    console.log(query)
                     setNewField({});
                   }}
                 />

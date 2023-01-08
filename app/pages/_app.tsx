@@ -8,7 +8,7 @@ import { AnimatePresence } from "framer-motion";
 export default function App({ Component, pageProps }: AppProps) {
   const [isHome, setIsHome] = useState<boolean>(true);
   const [data, setData] = useState<any>([]);
-  console.log(data)
+  //console.log(data)
 
   return (
     <div className="flex h-full min-h-screen w-full relative">

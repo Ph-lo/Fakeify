@@ -24,6 +24,7 @@ export default function Home({ isHome, setIsHome, data, setData }: any) {
 const HomeScreen = ({ setIsHome }: any) => {
   return (
     <motion.div
+      key="home-page"
       className="h-full"
       animate={{ opacity: 1 }}
       initial={{ opacity: 0 }}
@@ -31,6 +32,7 @@ const HomeScreen = ({ setIsHome }: any) => {
     >
       <div className="relative w-full h-full">
         <motion.div
+          key="home-page-content"
           className="absolute w-[92%] rounded-t-xl left-[4%] right-auto"
           animate={{ height: "100%" }}
           initial={{ height: 0 }}
