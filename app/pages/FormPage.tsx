@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { DisplayFields } from "../components/DisplayFields";
 
-export const FormPage = ({ isHome, setIsHome }: any) => {
+export const FormPage = ({ isHome, setIsHome, data, setData }: any) => {
   const fakeData = [
     {
       id: 1,
@@ -63,7 +63,7 @@ export const FormPage = ({ isHome, setIsHome }: any) => {
             transition={{ duration: 0.3, delay: 0 }}
           >
             <div className="bg-appBlue rounded-t-xl h-full w-full">
-              <DisplayFields fields={fakeData} />
+              <DisplayFields fields={data} />
             </div>
           </motion.div>
         </AnimatePresence>

@@ -8,14 +8,14 @@ import { FormPage } from "./FormPage";
 import Lottie from "react-lottie";
 import animationData from "../public/robot.json";
 
-export default function Home({ isHome, setIsHome }: any) {
+export default function Home({ isHome, setIsHome, data, setData }: any) {
   //console.log(setIsHome);
   return (
     <div className="w-full">
       {isHome ? (
         <HomeScreen setIsHome={setIsHome} />
       ) : (
-        <FormPage isHome={isHome} setIsHome={setIsHome} />
+        <FormPage isHome={isHome} setIsHome={setIsHome} data={data} setData={setData}/>
       )}
     </div>
   );

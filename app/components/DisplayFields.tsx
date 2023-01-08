@@ -7,11 +7,10 @@ import Select from "react-select";
 import { MdDragIndicator } from "react-icons/md";
 
 interface FieldProps {
-  id: number;
   name: string;
-  type: string;
+  type: {value: string, label: string};
   maxLen?: number;
-  format?: string;
+  format?: {value: string, label: string};
 }
 
 interface Props {
@@ -66,7 +65,9 @@ const TYPES = [
 ];
 
 export const DisplayFields = ({ fields }: Props) => {
-  const [state, setState] = useState<any>([...fields]);
+  const [state, setState] = useState<any>(fields);
+  console.log(state)
+
   return (
     <motion.div
       animate={{ opacity: 1 }}
@@ -82,8 +83,8 @@ export const DisplayFields = ({ fields }: Props) => {
           <div className="w-20" />
         </header>
         <div className="mt-10">
-          {state?.map((row: any) => (
-            <FieldsRow row={row} />
+          {fields?.map((row: any, index: number) => (
+            <FieldsRow key={`field-${index}`} row={row} />
           ))}
         </div>
         {/* <DraggableList fields={fields} /> */}
@@ -97,17 +98,20 @@ const FieldsRow = ({ row }: any) => {
   return (
     <div className="flex my-3 px-10 space-x-5">
       <div className="w-full">
-        <input
+        <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px]">{row?.name}</p>
+        {/* <input
           className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px]"
           type="text"
           value={row?.name}
-        />
+        /> */}
       </div>
       <div className="w-full">
-        <Select
+        <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px]">{row?.type?.label}</p>
+
+        {/* <Select
           placeholder="Select a type"
           options={TYPES}
-          value={{ label: row?.type, value: row?.type }}
+          value={row?.type}
           styles={{
             control: (base) => ({
               ...base,
@@ -124,58 +128,39 @@ const FieldsRow = ({ row }: any) => {
               },
             }),
           }}
-        />
+        /> */}
       </div>
       <div className="w-full">
         {row?.format ? (
-          <Select
-            placeholder="Select a type"
-            options={TYPES}
-            value={{ label: row?.type, value: row?.type }}
-            styles={{
-              control: (base) => ({
-                ...base,
-                color: "black",
-                borderColor: "black",
-                borderRadius: "8px",
-                backgroundColor: "#DDDDDD",
-                // This line disable the blue border
-                boxShadow: "none",
-                height: "15px",
-                width: "191px",
-                "&:hover": {
-                  borderColor: "black",
-                },
-              }),
-            }}
-          />
+          <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px]">{row?.format?.label}</p>
+          // <Select
+          //   placeholder="Select a format"
+          //   options={TYPES}
+          //   value={row?.format}
+          //   styles={{
+          //     control: (base) => ({
+          //       ...base,
+          //       color: "black",
+          //       borderColor: "black",
+          //       borderRadius: "8px",
+          //       backgroundColor: "#DDDDDD",
+          //       // This line disable the blue border
+          //       boxShadow: "none",
+          //       height: "15px",
+          //       width: "191px",
+          //       "&:hover": {
+          //         borderColor: "black",
+          //       },
+          //     }),
+          //   }}
+          // />
         ) : (
           <div className="h-10 w-full max-w-[191px] bg-secondary rounded-lg opacity-40"></div>
         )}
       </div>
       <div className="w-full">
-        {row?.maxLen ? (
-          <Select
-            placeholder="Select a type"
-            options={TYPES}
-            value={{ label: row?.type, value: row?.type }}
-            styles={{
-              control: (base) => ({
-                ...base,
-                color: "black",
-                borderColor: "black",
-                borderRadius: "8px",
-                backgroundColor: "#DDDDDD",
-                // This line disable the blue border
-                boxShadow: "none",
-                height: "15px",
-                width: "191px",
-                "&:hover": {
-                  borderColor: "black",
-                },
-              }),
-            }}
-          />
+        {row?.maxLength ? (
+          <p className="bg-primary text-secondary rounded-lg h-9 text-center max-w-[190px]">{row?.maxLength}</p>
         ) : (
           <div className="h-10 w-full max-w-[191px] bg-secondary rounded-lg opacity-40"></div>
         )}
