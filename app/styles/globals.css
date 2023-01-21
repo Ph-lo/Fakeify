@@ -120,3 +120,14 @@ a {
 .zIndex {
   z-index: 100;
 }
+
+*{
+  -ms-overflow-style: none;
+}
+#noScrollBar::-webkit-scrollbar {
+  display: none !important;
+}
+#noScrollBar {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}

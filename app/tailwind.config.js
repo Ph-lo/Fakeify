@@ -6,9 +6,9 @@ module.exports = {
   ],
   theme: {
     borderWidth: {
-      '1': '1px',
-      '2': '2px',
-      '3': '3px'
+      1: "1px",
+      2: "2px",
+      3: "3px",
     },
     extend: {
       colors: {
@@ -16,6 +16,9 @@ module.exports = {
         secondary: "#222831",
         appBlue: "#30475E",
         appRed: "#F05454",
+      },
+      boxShadow: {
+        shadowBottom: "O 4px 4px rgba(0, 0, 0, 0.3)",
       },
     },
   },

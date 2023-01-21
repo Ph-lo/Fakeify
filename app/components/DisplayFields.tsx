@@ -86,14 +86,17 @@ export const DisplayFields = () => {
       animate={{ opacity: 1 }}
       initial={{ opacity: 0 }}
       transition={{ duration: 0.3, delay: 0 }}
+      className="h-full"
     >
-      <div>
-        <header className="flex text-xl pb-3 mx-10 space-x-5 pt-10 border-b-2 border-primary">
-          <h3 className="w-full">Name</h3>
-          <h3 className="w-full">Type</h3>
-          <h3 className="w-full">Format</h3>
-          <h3 className="w-full">Length</h3>
-          <div className="w-20" />
+      <div id="noScrollBar" className="h-full overflow-y-scroll">
+        <header className="sticky z-10 rounded-xl top-0 text-xl px-10 space-x-5 pt-10 shadow-[0_35px_40px_-10px_#30475E] bg-appBlue">
+          <div className="flex border-b-2 pb-3 border-primary">
+            <h3 className="w-full">Name</h3>
+            <h3 className="w-full">Type</h3>
+            <h3 className="w-full">Format</h3>
+            <h3 className="w-full">Length</h3>
+            <div className="w-20" />
+          </div>
         </header>
         <div className="mt-10">
           {data?.map((row: any, index: number) => (

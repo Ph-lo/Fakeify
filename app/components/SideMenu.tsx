@@ -9,6 +9,7 @@ import Select from "react-select";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AppContext } from "../context/AppProvider";
+import { CSVLink, CSVDownload } from "react-csv";
 
 export const SideMenu = () => {
   const { isHome, setIsHome } = useContext(AppContext);
@@ -72,10 +73,15 @@ const FormNav = () => {
   const [exportSetting, setExportSetting] = useState<{
     nbr: string;
     extension: string;
-  }>({ nbr: "1", extension: "" });
-  const options: { value: string; label: string }[] = [
-    { label: "String", value: "string" },
-  ];
+  }>({ nbr: "1", extension: "json" });
+  const [exportDoc, setExportDoc] = useState<{
+    ready: boolean;
+    doc: { header: any; data: any };
+  }>({
+    ready: false,
+    doc: { header: [], data: [] },
+  });
+
   const FORMATS = {
     phone: [
       { value: "us", label: "US" },
@@ -135,9 +141,15 @@ const FormNav = () => {
       ...provided,
       color: state?.isSelected ? "white" : "black",
     }),
+    placeholder: (defaultStyles: any) => {
+      return {
+        ...defaultStyles,
+        color: "#A3A9B4",
+      };
+    },
   };
   const { data } = useContext(AppContext);
-  console.log(data);
+  //console.log(data);
   return (
     <motion.div
       key="side-menu-form"
@@ -276,18 +288,19 @@ const FormNav = () => {
                   <TbListNumbers size={20} color={"black"} />
                 </label>
                 <input
-                  placeholder="Max length"
-                  className="bg-primary border-1 h-9 w-48 pl-3 rounded-lg border-secondary"
+                  placeholder="Number of rows"
+                  className="bg-primary text-black border-1 h-9 w-48 pl-3 rounded-lg border-secondary"
                   type="number"
                   name="max"
                   id="max"
                   value={exportSetting?.nbr}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setExportSetting({
                       ...exportSetting,
                       nbr: e?.target?.value,
-                    })
-                  }
+                    });
+                    // setExportDoc({ready: false, doc: []});
+                  }}
                 />
               </div>
               <div className="flex space-x-2 items-center">
@@ -296,38 +309,109 @@ const FormNav = () => {
                 </label>
                 <Select
                   placeholder="Select extension"
-                  options={options}
+                  options={[
+                    { label: "CSV", value: "csv" },
+                    { label: "JSON", value: "json" },
+                  ]}
                   theme={theme}
                   styles={customStyle}
+                  value={{
+                    label: exportSetting?.extension.toUpperCase(),
+                    value: exportSetting?.extension,
+                  }}
+                  onChange={(e) =>
+                    setExportSetting({
+                      ...exportSetting,
+                      extension: e?.value as string,
+                    })
+                  }
                 />
               </div>
 
               <div className="flex items-center">
-                <input
-                  className="bg-primary ml-7 w-28 h-9 text-secondary border-1 rounded-xl border-secondary"
-                  type="submit"
-                  name="submit"
-                  value={"Export"}
-                  onClick={() => {
-                    fetch("http://localhost:3001/api/random", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        fieldNbr: exportSetting?.nbr,
-                        data: data?.map((d: any) => ({
-                          name: d?.name,
-                          type: d?.type?.value,
-                          format: d?.format?.value,
-                          maxLength: d?.maxLength,
-                          nbrOfP: d?.nbrOfP,
-                        })),
-                      }),
-                    })
-                      .then((res) => res.json())
-                      .then((r) => console.log(r))
-                      .catch((e) => console.log(e));
-                  }}
-                />
+                {exportDoc?.ready && exportSetting?.extension === "csv" ? (
+                  <motion.div
+                    key="btn"
+                    //animate={{ opacity: 1, width: 100 }}
+                    animate={{
+                      backgroundColor: ["hsl(0, 0, 87)", "hsl(141, 37, 57)"],
+                      borderColor: "#68B984",
+                      color: "#DDDDDD",
+                    }}
+                    // initial={{ opacity: 0 }}
+                    transition={{ duration: 0.5, delay: 0 }}
+                    className="flex items-center justify-center ml-7 w-28 h-9 text-secondary border-1 rounded-xl border-secondary"
+                  >
+                    <CSVLink
+                      data={exportDoc?.doc?.data}
+                      //headers={exportDoc?.doc?.header}
+                    >
+                      Download
+                    </CSVLink>
+                  </motion.div>
+                ) : exportDoc?.ready && exportSetting?.extension === "json" ? (
+                  <motion.div
+                    key="btn-json"
+                    //animate={{ opacity: 1, width: 100 }}
+                    animate={{
+                      backgroundColor: ["hsl(0, 0, 87)", "hsl(141, 37, 57)"],
+                      borderColor: "#68B984",
+                      color: "#DDDDDD",
+                    }}
+                    // initial={{ opacity: 0 }}
+                    transition={{ duration: 0.5, delay: 0 }}
+                    className="flex items-center justify-center ml-7 w-28 h-9 text-secondary border-1 rounded-xl border-secondary"
+                  >
+                    <a
+                      href={URL.createObjectURL(
+                        new Blob([JSON.stringify(exportDoc?.doc?.data)], {
+                          type: "text/plain",
+                        })
+                      )}
+                      download="Fake-data.json"
+                    >
+                      Download
+                    </a>
+                  </motion.div>
+                ) : (
+                  <input
+                    className="bg-primary ml-7 w-28 h-9 text-secondary border-1 rounded-xl border-secondary"
+                    type="submit"
+                    name="submit"
+                    value={"Export"}
+                    onClick={() => {
+                      fetch("http://localhost:3001/api/random", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          fieldNbr: exportSetting?.nbr,
+                          extension: exportSetting?.extension,
+                          data: data?.map((d: any) => ({
+                            name: d?.name,
+                            type: d?.type?.value,
+                            format: d?.format?.value,
+                            maxLength: d?.maxLength,
+                            nbrOfP: d?.nbrOfP,
+                          })),
+                        }),
+                      })
+                        .then((res) => res.json())
+                        .then((r) => {
+                          //console.log(r);
+                          const headers = [];
+                          for (const e in r?.[0]) {
+                            headers?.push({ label: e, key: e });
+                          }
+                          setExportDoc({
+                            ready: true,
+                            doc: { header: headers, data: r },
+                          });
+                          //console.log(headers);
+                        })
+                        .catch((e) => console.log(e));
+                    }}
+                  />
+                )}
               </div>
             </div>
           </div>
