@@ -74,7 +74,7 @@ exports.randomParagraphs = (req: any, res: any, next: any) => {
 exports.randomDate = (req: any, res: any, next: any) => {
   const date = dates.getRandomDate(req?.body?.format);
   res.status(200).json(date);
-}
+};
 
 // ######################################################################################
 // ############################         ADDRESSES         ###############################
@@ -83,22 +83,22 @@ exports.randomDate = (req: any, res: any, next: any) => {
 exports.randomFullAddress = (req: any, res: any, next: any) => {
   const fullAddress = addresses.getRandomFullAddress();
   res.status(200).json(fullAddress);
-}
+};
 
 exports.randomPostcode = (req: any, res: any, next: any) => {
   const postcode = addresses.getRandomPostcode();
   res.status(200).json(postcode);
-}
+};
 
 exports.randomStreet = (req: any, res: any, next: any) => {
   const street = addresses.getRandomStreet();
   res.status(200).json(street);
-}
+};
 
 exports.randomCountry = (req: any, res: any, next: any) => {
   const country = addresses.getRandomCountry();
   res.status(200).json(country);
-}
+};
 
 // ######################################################################################
 // ###############################         IDS         ##################################
@@ -107,18 +107,22 @@ exports.randomCountry = (req: any, res: any, next: any) => {
 exports.randomStringId = (req: any, res: any, next: any) => {
   const id = texts.getRandomStringId(req?.body?.maxLength);
   res.status(200).json(id);
-}
+};
 
 exports.randomId = (req: any, res: any, next: any) => {
   const id = texts.getRandomId(req?.body?.maxLength);
   res.status(200).json(id);
-}
+};
 
 // ######################################################################################
 // ##############################         MIXED         #################################
 // ######################################################################################
 
-const TYPE_TO_FUNCTION = {
+type TypeToFunction = {
+  [key: string]: (param?: any) => any;
+};
+
+const TYPE_TO_FUNCTION: TypeToFunction = {
   firstname: () => names.getRandomFirstname(),
   lastname: () => names.getRandomLastname(),
   name: () => names.getRandomName(),
@@ -132,13 +136,12 @@ const TYPE_TO_FUNCTION = {
   street: () => addresses.getRandomStreet(),
   country: () => addresses.getRandomCountry(),
   stringId: (maxLength: number) => texts.getRandomStringId(maxLength),
-  id: (maxLength: number) => texts.getRandomId(maxLength)
+  id: (maxLength: number) => texts.getRandomId(maxLength),
 };
 
 type FUNC = (val?: any) => any;
 
 exports.random = (req: any, res: any, next: any) => {
-  //console.log(req?.body);
   let fieldNbr = req?.body?.fieldNbr;
   let fields = [];
   let name = {};
@@ -146,58 +149,53 @@ exports.random = (req: any, res: any, next: any) => {
   for (let i = 0; i < fieldNbr; i++) {
     name = {
       firstname: TYPE_TO_FUNCTION["firstname"](),
-      lastname: TYPE_TO_FUNCTION["lastname"]()
+      lastname: TYPE_TO_FUNCTION["lastname"](),
     };
-    
+
     for (let field of req?.body?.data) {
       //console.log(field)
       let tmpField = {};
       if (field?.type === "email") {
         fields.push({
           name: field?.name,
-          //@ts-ignore
-          value: TYPE_TO_FUNCTION[field?.type](name)
-        })
+          value: TYPE_TO_FUNCTION[field?.type](name),
+        });
       } else if (field?.type === "firstname") {
         fields.push({
           name: field?.name,
           //@ts-ignore
-          value: name?.firstname
-        })
+          value: name?.firstname,
+        });
       } else if (field?.type === "lastname") {
         fields.push({
           name: field?.name,
           //@ts-ignore
-          value: name?.lastname
-        })
+          value: name?.lastname,
+        });
       } else if (field?.format) {
         fields.push({
           name: field?.name,
-          //@ts-ignore
-          value: TYPE_TO_FUNCTION[field?.type](field?.format)
-        })
+          value: TYPE_TO_FUNCTION[field?.type](field?.format),
+        });
       } else if (field?.maxLength) {
         fields.push({
           name: field?.name,
-          //@ts-ignore
-          value: TYPE_TO_FUNCTION[field?.type](field?.maxLength)
-        })
+          value: TYPE_TO_FUNCTION[field?.type](field?.maxLength),
+        });
       } else if (field?.nbrOfP) {
         fields.push({
           name: field?.name,
-          //@ts-ignore
-          value: TYPE_TO_FUNCTION[field?.type](field?.nbrOfP)
-        })
+          value: TYPE_TO_FUNCTION[field?.type](field?.nbrOfP),
+        });
       } else {
         fields.push({
           name: field?.name,
-          //@ts-ignore
-          value: TYPE_TO_FUNCTION[field?.type]()
-        })
+          value: TYPE_TO_FUNCTION[field?.type](),
+        });
       }
       //console.log(TYPE_TO_FUNCTION[field?.type]())
       //fields = {...fields, fi}
     }
   }
   res.status(200).json(fields);
-}
+};

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { BsType } from "react-icons/bs";
 import { FiServer, FiBox, FiUpload, FiLifeBuoy } from "react-icons/fi";
 import { SingleValue, ActionMeta, InputActionMeta } from "react-select";
@@ -8,8 +8,10 @@ import { AiOutlineSliders } from "react-icons/ai";
 import Select from "react-select";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { AppContext } from "../context/AppProvider";
 
-export const SideMenu = ({ isHome, setIsHome, data, setData }: any) => {
+export const SideMenu = () => {
+  const { isHome, setIsHome } = useContext(AppContext);
   return (
     <motion.div
       //className=" bg-[#ACECA1] rounded-3xl"
@@ -56,7 +58,7 @@ export const SideMenu = ({ isHome, setIsHome, data, setData }: any) => {
           </motion.div>
         ) : (
           <div className="h-[90%]">
-            <FormNav data={data} setData={setData} />
+            <FormNav />
           </div>
         )}
       </div>
@@ -64,9 +66,13 @@ export const SideMenu = ({ isHome, setIsHome, data, setData }: any) => {
   );
 };
 
-const FormNav = ({ data, setData }: any) => {
+const FormNav = () => {
   const { push, query } = useRouter();
   const [newField, setNewField] = useState<any>({});
+  const [exportSetting, setExportSetting] = useState<{
+    nbr: string;
+    extension: string;
+  }>({ nbr: "1", extension: "" });
   const options: { value: string; label: string }[] = [
     { label: "String", value: "string" },
   ];
@@ -130,7 +136,8 @@ const FormNav = ({ data, setData }: any) => {
       color: state?.isSelected ? "white" : "black",
     }),
   };
-  // console.log(newField)
+  const { data } = useContext(AppContext);
+  console.log(data);
   return (
     <motion.div
       key="side-menu-form"
@@ -274,6 +281,13 @@ const FormNav = ({ data, setData }: any) => {
                   type="number"
                   name="max"
                   id="max"
+                  value={exportSetting?.nbr}
+                  onChange={(e) =>
+                    setExportSetting({
+                      ...exportSetting,
+                      nbr: e?.target?.value,
+                    })
+                  }
                 />
               </div>
               <div className="flex space-x-2 items-center">
@@ -294,6 +308,25 @@ const FormNav = ({ data, setData }: any) => {
                   type="submit"
                   name="submit"
                   value={"Export"}
+                  onClick={() => {
+                    fetch("http://localhost:3001/api/random", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        fieldNbr: exportSetting?.nbr,
+                        data: data?.map((d: any) => ({
+                          name: d?.name,
+                          type: d?.type?.value,
+                          format: d?.format?.value,
+                          maxLength: d?.maxLength,
+                          nbrOfP: d?.nbrOfP,
+                        })),
+                      }),
+                    })
+                      .then((res) => res.json())
+                      .then((r) => console.log(r))
+                      .catch((e) => console.log(e));
+                  }}
                 />
               </div>
             </div>

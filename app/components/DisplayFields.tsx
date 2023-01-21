@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useContext, useEffect, useState } from "react";
 import { AnimatePresence, DraggableProps, motion } from "framer-motion";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { reorder } from "../utils/reorder";
@@ -7,6 +7,7 @@ import Select from "react-select";
 import { MdDragIndicator } from "react-icons/md";
 import { TiDeleteOutline } from "react-icons/ti";
 import { useRouter } from "next/router";
+import { AppContext } from "../context/AppProvider";
 
 interface FieldProps {
   name: string;
@@ -66,7 +67,7 @@ const TYPES = [
   },
 ];
 
-export const DisplayFields = ({ state, setState }: any) => {
+export const DisplayFields = () => {
   //const [state, setState] = useState<any>([]);
   const router = useRouter();
 
@@ -77,7 +78,7 @@ export const DisplayFields = ({ state, setState }: any) => {
   //     router.push({ query: {} });
   //   }
   // }, [router?.query]);
-  console.log(state);
+  const { data, setData } = useContext(AppContext);
 
   return (
     <motion.div
@@ -95,14 +96,8 @@ export const DisplayFields = ({ state, setState }: any) => {
           <div className="w-20" />
         </header>
         <div className="mt-10">
-          {state?.map((row: any, index: number) => (
-            <FieldsRow
-              key={`field-${index}`}
-              row={row}
-              index={index}
-              state={state}
-              setState={setState}
-            />
+          {data?.map((row: any, index: number) => (
+            <FieldsRow key={`field-${index}`} row={row} index={index} />
           ))}
         </div>
       </div>
@@ -110,8 +105,9 @@ export const DisplayFields = ({ state, setState }: any) => {
   );
 };
 
-const FieldsRow = ({ row, index, state, setState }: any) => {
+const FieldsRow = ({ row, index }: any) => {
   //console.log(index);
+  const { data, setData } = useContext(AppContext);
   return (
     <div className="flex my-3 px-10 space-x-5">
       <div className="w-full">
@@ -147,9 +143,9 @@ const FieldsRow = ({ row, index, state, setState }: any) => {
           size={22}
           className="cursor-pointer hover:text-secondary transition-colors ease-in-out duration-200"
           onClick={() => {
-            let tmpState = [...state];
+            let tmpState = [...data];
             tmpState.splice(index, 1);
-            setState(tmpState);
+            setData(tmpState);
           }}
         />
       </div>

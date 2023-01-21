@@ -1,15 +1,16 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { DisplayFields } from "../components/DisplayFields";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import { userTemplate } from "../public/userTemplate";
+import { AppContext } from "../context/AppProvider";
 
-export const FormPage = ({ isHome, setIsHome, data, setData }: any) => {
+export const FormPage = () => {
   const router = useRouter();
-  const [state, setState] = useState<any>([]);
+  // const [state, setState] = useState<any>([]);
   const [template, setTemplate] = useState<any>();
-
+  const { data, setData } = useContext(AppContext);
   const theme = (theme: any) => ({
     ...theme,
     borderRadius: 0,
@@ -49,7 +50,8 @@ export const FormPage = ({ isHome, setIsHome, data, setData }: any) => {
   const handleTemplate = () => {
     if (template?.value !== "") {
       if (template?.value === "user") {
-        setState(userTemplate);
+        // setState(userTemplate);
+        setData(userTemplate);
         setTemplate([]);
       }
     }
@@ -58,7 +60,7 @@ export const FormPage = ({ isHome, setIsHome, data, setData }: any) => {
   useEffect(() => {
     if (router?.query?.field) {
       //@ts-ignore
-      setState([...state, JSON.parse(router.query?.field)]);
+      setData([...data, JSON.parse(router.query?.field)]);
       router.push({ query: {} });
     }
   }, [router?.query]);
@@ -93,9 +95,9 @@ export const FormPage = ({ isHome, setIsHome, data, setData }: any) => {
         <button
           className="border-2 border-appBlue text-appBlue py-1 px-2 rounded-lg hover:text-primary hover:border-primary hover:opacity-70 ease-in-out duration-300"
           onClick={() => {
-            if (state?.length > 0) {
+            if (data?.length > 0) {
               if (confirm("Are you sure you want to delete all the fields ?"))
-                setState([]);
+                setData([]);
             }
           }}
         >
@@ -112,7 +114,7 @@ export const FormPage = ({ isHome, setIsHome, data, setData }: any) => {
             transition={{ duration: 0.3, delay: 0 }}
           >
             <div className="bg-appBlue rounded-t-xl h-full w-full">
-              <DisplayFields state={state} setState={setState} />
+              <DisplayFields />
             </div>
           </motion.div>
         </AnimatePresence>

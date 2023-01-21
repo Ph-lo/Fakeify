@@ -7,21 +7,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FormPage } from "./FormPage";
 import Lottie from "react-lottie";
 import animationData from "../public/robot.json";
+import { useContext } from "react";
+import { AppContext } from "../context/AppProvider";
 
-export default function Home({ isHome, setIsHome, data, setData }: any) {
+export default function Home() {
+  const { isHome } = useContext(AppContext);
   //console.log(setIsHome);
-  return (
-    <div className="w-full">
-      {isHome ? (
-        <HomeScreen setIsHome={setIsHome} />
-      ) : (
-        <FormPage isHome={isHome} setIsHome={setIsHome} data={data} setData={setData}/>
-      )}
-    </div>
-  );
+  return <div className="w-full">{isHome ? <HomeScreen /> : <FormPage />}</div>;
 }
 
-const HomeScreen = ({ setIsHome }: any) => {
+const HomeScreen = () => {
+  const { setIsHome } = useContext(AppContext);
   return (
     <motion.div
       key="home-page"
