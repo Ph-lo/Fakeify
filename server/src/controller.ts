@@ -121,6 +121,9 @@ exports.randomId = (req: any, res: any, next: any) => {
 type TypeToFunction = {
   [key: string]: (param?: any) => any;
 };
+type TMP_FIELD = {
+  [key: string]: string;
+};
 
 const TYPE_TO_FUNCTION: TypeToFunction = {
   firstname: () => names.getRandomFirstname(),
@@ -139,7 +142,21 @@ const TYPE_TO_FUNCTION: TypeToFunction = {
   id: (maxLength: number) => texts.getRandomId(maxLength),
 };
 
-type FUNC = (val?: any) => any;
+const flattenObject = (obj: any) => {
+  const flattened: any = [];
+
+  Object.keys(obj).forEach((key) => {
+    const value = obj[key];
+
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+      flattened?.push(flattenObject(value));
+    } else {
+      flattened.push(value);
+    }
+  });
+
+  return flattened;
+};
 
 exports.random = (req: any, res: any, next: any) => {
   let fieldNbr = req?.body?.fieldNbr;
@@ -152,50 +169,32 @@ exports.random = (req: any, res: any, next: any) => {
       lastname: TYPE_TO_FUNCTION["lastname"](),
     };
 
+    let tmpField: TMP_FIELD = {};
     for (let field of req?.body?.data) {
-      //console.log(field)
-      let tmpField = {};
       if (field?.type === "email") {
-        fields.push({
-          name: field?.name,
-          value: TYPE_TO_FUNCTION[field?.type](name),
-        });
+        tmpField[field?.name] = TYPE_TO_FUNCTION[field?.type](name);
       } else if (field?.type === "firstname") {
-        fields.push({
-          name: field?.name,
-          //@ts-ignore
-          value: name?.firstname,
-        });
+        //@ts-ignore
+        tmpField[field?.name] = name?.firstname;
       } else if (field?.type === "lastname") {
-        fields.push({
-          name: field?.name,
-          //@ts-ignore
-          value: name?.lastname,
-        });
+        //@ts-ignore
+        tmpField[field?.name] = name?.lastname;
       } else if (field?.format) {
-        fields.push({
-          name: field?.name,
-          value: TYPE_TO_FUNCTION[field?.type](field?.format),
-        });
+        tmpField[field?.name] = TYPE_TO_FUNCTION[field?.type](field?.format);
       } else if (field?.maxLength) {
-        fields.push({
-          name: field?.name,
-          value: TYPE_TO_FUNCTION[field?.type](field?.maxLength),
-        });
+        tmpField[field?.name] = TYPE_TO_FUNCTION[field?.type](field?.maxLength);
       } else if (field?.nbrOfP) {
-        fields.push({
-          name: field?.name,
-          value: TYPE_TO_FUNCTION[field?.type](field?.nbrOfP),
-        });
+        tmpField[field?.name] = TYPE_TO_FUNCTION[field?.type](field?.nbrOfP);
+      } else if (
+        field?.type === "fullAddress" &&
+        req?.body?.extension === "csv"
+      ) {
+        tmpField[field?.name] = flattenObject(TYPE_TO_FUNCTION[field?.type]());
       } else {
-        fields.push({
-          name: field?.name,
-          value: TYPE_TO_FUNCTION[field?.type](),
-        });
+        tmpField[field?.name] = TYPE_TO_FUNCTION[field?.type]();
       }
-      //console.log(TYPE_TO_FUNCTION[field?.type]())
-      //fields = {...fields, fi}
     }
+    fields.push(tmpField);
   }
   res.status(200).json(fields);
 };
