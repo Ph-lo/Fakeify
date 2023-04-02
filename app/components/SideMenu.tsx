@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { AppContext } from "../context/AppProvider";
 import { CSVLink, CSVDownload } from "react-csv";
+import Loader from "../public/loader.json";
 
 export const SideMenu = () => {
   const { isHome, setIsHome } = useContext(AppContext);
@@ -149,6 +150,7 @@ const FormNav = () => {
     },
   };
   const { data } = useContext(AppContext);
+  const [loading, setLoading] = useState<boolean>(false);
   //console.log(data);
   return (
     <motion.div
@@ -341,6 +343,7 @@ const FormNav = () => {
                     // initial={{ opacity: 0 }}
                     transition={{ duration: 0.5, delay: 0 }}
                     className="flex items-center justify-center ml-7 w-28 h-9 text-secondary border-1 rounded-xl border-secondary"
+                    onClick={() => setExportDoc({ ...exportDoc, ready: false })}
                   >
                     <CSVLink
                       data={exportDoc?.doc?.data}
@@ -361,6 +364,7 @@ const FormNav = () => {
                     // initial={{ opacity: 0 }}
                     transition={{ duration: 0.5, delay: 0 }}
                     className="flex items-center justify-center ml-7 w-28 h-9 text-secondary border-1 rounded-xl border-secondary"
+                    onClick={() => setExportDoc({ ...exportDoc, ready: false })}
                   >
                     <a
                       href={URL.createObjectURL(
@@ -375,11 +379,12 @@ const FormNav = () => {
                   </motion.div>
                 ) : (
                   <input
-                    className="bg-primary ml-7 w-28 h-9 text-secondary border-1 rounded-xl border-secondary"
+                    className="bg-primary ml-7 cursor-pointer w-28 h-9 text-secondary border-1 rounded-xl border-secondary"
                     type="submit"
                     name="submit"
                     value={"Export"}
                     onClick={() => {
+                      setLoading(true);
                       fetch("http://localhost:3001/api/random", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },

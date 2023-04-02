@@ -44,7 +44,9 @@ const HomeScreen = () => {
             />
           </div>
           <div className="flex justify-center items-center h-full">
-            <h1 className="z-10">HOME PAGE</h1>
+            {/* <h1 className="z-10 text-[20px] text-primary">
+              Get your fake data now, for free!
+            </h1> */}
           </div>
         </motion.div>
         <div className="absolute bottom-20 text-center w-full">
