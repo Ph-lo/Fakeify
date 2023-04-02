@@ -25,4 +25,3 @@ Install dependencies and run both app & server directories
 yarn install
 yarn start
 ```
-The server will run on the port:8080
